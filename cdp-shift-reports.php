@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: CDP Voters
- * Plugin URI: https://www.cooperative4thecommunity.com/cdp-voters
- * Description: A plugin to submit queries to the CDP Voter database and display results.
+ * Plugin Name: CDP Shift Reports
+ * Plugin URI: https://www.cooperative4thecommunity.com/cdp-shift-reports
+ * Description: A plugin to submit shift reports to the CDP schedule database.
  * Version: 1.0
  * Author: Kyle Donnelly
  * Author URI: https://www.cooperative4thecommunity.com
