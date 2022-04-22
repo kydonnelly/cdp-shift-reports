@@ -38,24 +38,6 @@ function cdp_submit_shift_result() {
     return;
   }
 
-  // validate required fields
-  if (!isset( $_POST['gatherer'] )) {
-    echo '<p>Must include the gatherer\'s name!</p>';
-    return;
-  }
-  if (!isset( $_POST['location_id'] )) {
-    echo '<p>Must include the location!</p>';
-    return;
-  }
-  if (!isset( $_POST['start_time'] )) {
-    echo '<p>Must include the start time!</p>';
-    return;
-  }
-  if (!isset( $_POST['end_time'] )) {
-    echo '<p>Must include the end time!</p>';
-    return;
-  }
-
   $shift_id = sanitize_text_field( $_POST['shift_id'] );
   $gatherer = sanitize_text_field( $_POST['gatherer'] );
   $location_id = sanitize_text_field( $_POST['location_id'] );
@@ -63,6 +45,24 @@ function cdp_submit_shift_result() {
   $end_time = sanitize_text_field( $_POST['end_time'] );
   $raw_signatures = sanitize_text_field( $_POST['signature_count'] );
   $validated_signatures = sanitize_text_field( $_POST['validity_count'] );
+
+  // validate required fields
+  if (empty($gatherer)) {
+    echo '<p>Must include the gatherer\'s name!</p>';
+    return;
+  }
+  if (empty($location_id)) {
+    echo '<p>Must include the location!</p>';
+    return;
+  }
+  if (empty($start_time)) {
+    echo '<p>Must include the start time!</p>';
+    return;
+  }
+  if (empty($end_time)) {
+    echo '<p>Must include the end time!</p>';
+    return;
+  }
 
   $insertions = array('gatherer' => $gatherer,
     'location_id' => $location_id,
