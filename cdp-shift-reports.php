@@ -18,7 +18,7 @@ function cdp_echo_report_response_html($success) {
   }
 }
 
-function cdp_get_locations() {
+function cdp_get_shift_locations() {
   global $wpdb;
   $table_name = $wpdb->prefix . "gathering_locations";
   $query = "SELECT location_id, name from $table_name ORDER BY name;";
@@ -29,7 +29,7 @@ function cdp_unreported_shifts() {
   global $wpdb;
   $table_name = $wpdb->prefix . "shifts_2022";
   $query = "SELECT " . implode(', ', SHIFT_REPORT_COLUMNS) . " from $table_name WHERE raw_signatures IS NULL OR validated_signatures IS NULL ORDER BY gatherer ASC, end_time DESC;";
-  $results = $wpdb->get_results($query);
+  return $wpdb->get_results($query);
 }
 
 function cdp_submit_shift_result() {
@@ -87,7 +87,7 @@ function cdp_submit_shift_result() {
 }
 
 function cdp_shift_report_form_code() {
-  $locations = cdp_get_locations();
+  $locations = cdp_get_shift_locations();
   $unreported_shifts = cdp_unreported_shifts();
 
   $location_map = array_combine(array_map(function($l) { return $l->location_id; }, $locations), $locations);
@@ -96,26 +96,26 @@ function cdp_shift_report_form_code() {
   echo '<form class="shift_report_form" action="" id="shift_report_form" method="post">';
   echo '<p>';
   echo '<label for="shift">Shift: </label>
-  <select id="shift_id" class="shift_field" style="width:50%" name="location_field">
+  <select id="shift_id" class="shift_field" style="width:50%" name="shift_id">
   <option value="none">Choose...</option>';
   foreach ($unreported_shifts as $shift) {
     $location_name = $location_map[$shift->location_id]->name;
     $display_text = $shift->gatherer . ' @ ' . $location_name . ', ' . $shift->start_time;
     echo '<option value="' . $shift->shift_id . '">' . ' ' . $display_text . '</option>';
   }
-  echo '</select>';
+  echo '</select><br />';
   echo '<label for="location">Location: </label>
-  <select id="location" class="location_field" style="width:50%" required="required" name="location_field">
+  <select id="location" class="location_field" style="width:50%" required="required" name="location">
   <option value="none">Choose...</option>';
   foreach ($locations as $location) {
-    echo '<option value="' . $location->location_id . '">' . ' ' . $location->name . ' ' . cdp_location_quality_emoji($location) . '</option>';
+    echo '<option value="' . $location->location_id . '">' . ' ' . $location->name . '</option>';
   }
-  echo '</select>';
+  echo '</select><br />';
   echo '<label for="gatherer">Name: </label><input autocapitalize="on" spellcheck="false" autocorrect="off" type="text" name="gatherer" id="gatherer" value="' . $_POST['gatherer'] . '" placeholder="Full name"><br />
-  <label for="start_time">Start Time: </label><input type="time" id="start_time" name="start_time" step="900" value="' . $_POST['start_time'] . '" required><br />
-  <label for="end_time">End Time: </label><input type="time" id="end_time" name="end_time" step="900" value="' . $_POST['end_time'] . '" required><br />
+  <label for="start_time">Start Time: </label><input type="time" id="start_time" name="start_time" step="60" value="' . $_POST['start_time'] . '" required><br />
+  <label for="end_time">End Time: </label><input type="time" id="end_time" name="end_time" step="60" value="' . $_POST['end_time'] . '" required><br />
   <label for="signature_count">Signatures Collected: </label><input type="text" name="signature_count" id="signature_count" value="' . $_POST['signature_count'] . '" placeholder="27"><br />
-  <label for="validity_count">Signatures Validated: </label><input type="text" name="validity_count" id="validity_count" value="' . $_POST['validity_count'] . '" placeholder="24">'
+  <label for="validity_count">Signatures Validated: </label><input type="text" name="validity_count" id="validity_count" value="' . $_POST['validity_count'] . '" placeholder="24">';
   echo '</p>';
   echo '<p><input type="submit" name="submit" id="submitButton" value="Submit">';
   echo '<input style="background-color:#c7c7c7" type="reset" name="clear" id="clearInput" value="Clear" onclick="return resetForm(this.form);"></p>';
@@ -125,8 +125,8 @@ function cdp_shift_report_form_code() {
 function cdp_shift_report_shortcode() {
   // wordpress entry point
   ob_start();
-  cdp_shift_report_code();
-  cdp_voter_lookup();
+  cdp_shift_report_form_code();
+  cdp_submit_shift_result();
 
   return ob_get_clean();
 }
