@@ -1,16 +1,32 @@
-<!-- wp:paragraph -->
-<p>{{CODEsetup}}</p>
-<!-- /wp:paragraph -->
-
-<div id="loginInfo">
-<p>Sign in with Google to submit a shift:<br><button onclick="login_with_google()">Sign In</button></p>
-</div>
-<p>Welcome to the C4C signature validating page! Fill in any fields you have information for. Use a single '?' for any unreadable characters.</p>
+<p>Select a shift from the list to update or enter a new one. Name, location, and times are required.</p>
 
 <!-- wp:paragraph -->
 <p>[cdp_shift_report]</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p>{{CODEresetshiftreport}}</p>
+<p>{{CODEresetshiftreports}}</p>
 <!-- /wp:paragraph -->
+
+<!-- {{CODEresetshiftreports}} -->
+<script>
+function resetForm(form) {
+  var inputs = form.getElementsByTagName('input');
+  for (var i = 0; i<inputs.length; i++) {
+    switch (inputs[i].type) {
+      case 'text':
+        inputs[i].value = '';
+        break;
+    }
+  }
+
+  resetFormSelection();
+
+  return false;
+}
+
+function resetFormSelection() {
+  let firstNameField = document.getElementById('gatherer');
+  firstNameField.select();
+}
+</script>
