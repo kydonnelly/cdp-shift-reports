@@ -96,7 +96,7 @@ function cdp_shift_report_form_code() {
   echo '<form class="shift_report_form" action="" id="shift_report_form" method="post">';
   echo '<p>';
   echo '<label for="shift">Shift: </label>
-  <select id="shift_id" class="shift_field" style="width:50%" name="shift_id">
+  <select id="shift_id" class="shift_field" style="width:50%" name="shift_id" value="' . $_POST['shift_id'] . '>
   <option value="none">Choose...</option>';
   foreach ($unreported_shifts as $shift) {
     $location_name = $location_map[$shift->location_id]->name;
@@ -105,7 +105,7 @@ function cdp_shift_report_form_code() {
   }
   echo '</select><br />';
   echo '<label for="location">Location: </label>
-  <select id="location" class="location_field" style="width:50%" required="required" name="location">
+  <select id="location" class="location_field" style="width:50%" required="required" name="location_id" value="' . $_POST['location_id'] . '">
   <option value="none">Choose...</option>';
   foreach ($locations as $location) {
     echo '<option value="' . $location->location_id . '">' . ' ' . $location->name . '</option>';
